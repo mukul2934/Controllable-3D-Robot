@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Homework 3</title>
+
+    <script type="text/javascript" src="http://osgjs.org/examples/vendors/Q.js"></script>
+    <script type="text/javascript" src="http://osgjs.org/examples/vendors/Hammer.js"></script>
+    <script type="text/javascript" src="http://osgjs.org/examples/vendors/Leap.js"></script>
+    <script type="text/javascript" src="js/OSG.js"></script>
+    <script src="js/index.js"></script>
+
+  </head>
+
+  <body>
+     <h1>Homework 3</h1>
+     Please leverage this code to finish the assignment. <br><br>
+     Using OSG.js build a robot that includes a body, head, arms (3 segments), and legs (3 segments).<br>
+     Basic segments can be cubes in the OSGjs library<br>
+     Ensure:<br>
+     The hierarchy is correct, moving the body moves everything<br>
+     Each segment is movable on its own.<br>
+     Some UI to manipulate your robot. (Can be one set of sliders that switch between joints.<br>
+     Extra credit:<br>
+     Add hand, feet, fingers, and toes.<br>
+     X-Extra credit<br>
+     Animate the included Ogre<br>
+     <br>
+
+
+    <table style="width:100%">
+    <tr>
+      <td>
+          <canvas id="3DView" width="700" height="700">
+          Oops ... your browser doesn't support the HTML5 canvas element
+          </canvas>
+      </td>
+    <td>
+        <table style="width:100%">
+            <!-- World and Head -->
+            <tr style="width:100%">
+              <button type="submit" onclick="setPose()">Set Pose</button> <br>
+              <button type="submit" onclick="resetPose()">Reset</button>
+                <td style="width:200px"> World<br>
+
+                    Rot X: <input name="world" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="world" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="world" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Head<br>
+                    Rot X: <input name="head" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="head" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="head" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Neck<br>
+                    Rot X: <input name="neck" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="neck" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="neck" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+            </tr>
+            <!-- Right Arm -->
+            <tr style="width:100%">
+                <td style="width:200px">Right Shoulder<br>
+                    Rot X: <input name="rightShoulder" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="rightShoulder" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="rightShoulder" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Right Elbow<br>
+                    Rot X: <input name="rightElbow" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="rightElbow" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="rightElbow" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Right Wrist<br>
+                    Rot X: <input name="rightWrist" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="rightWrist" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="rightWrist" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+            </tr>
+            <!-- Left Arm -->
+            <tr style="width:100%">
+                <td style="width:200px">Left Shoulder<br>
+                    Rot X: <input name="leftShoulder" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="leftShoulder" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="leftShoulder" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Left Elbow<br>
+                    Rot X: <input name="leftElbow" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="leftElbow" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="leftElbow" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Left Wrist<br>
+                    Rot X: <input name="leftWrist" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="leftWrist" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="leftWrist" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+            </tr>
+            <!-- Right Leg -->
+            <tr style="width:100%">
+                <td style="width:200px">Right Hip<br>
+                    Rot X: <input name="rightHip" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="rightHip" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="rightHip" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Right Knee<br>
+                    Rot X: <input name="rightKnee" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="rightKnee" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="rightKnee" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Right Ankle<br>
+                    Rot X: <input name="rightAnkle" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="rightAnkle" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="rightAnkle" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+            </tr>
+            <!-- Left Leg -->
+            <tr style="width:100%">
+                <td style="width:200px">Left Hip<br>
+                    Rot X: <input name="leftHip" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="leftHip" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="leftHip" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Left Knee<br>
+                    Rot X: <input name="leftKnee" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="leftKnee" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="leftKnee" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+                <td style="width:200px">Left Ankle<br>
+                    Rot X: <input name="leftAnkle" orien="x" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Y: <input name="leftAnkle" orien="y" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br>
+                    Rot Z: <input name="leftAnkle" orien="z" type="range" value="0" max="360" min="1" oninput="handleScroll(this);"></input><br><br><br><br>
+                </td>
+            </tr>
+        </table>
+    </td>
+    </tr>
+    </table>
+
+  </body>
+</html>
